@@ -35,7 +35,6 @@ int main(void){
         perror("Error notifier init");
         exit(2);
     }
-    daemon(1,1);
     watcher = inotify_add_watch(notifier, folder, IN_CREATE);
     
     if(watcher == -1){
@@ -43,6 +42,9 @@ int main(void){
     }else{
         printf("Observando: %s\n", folder);
     }
+    
+    daemon(1,1);
+
 
     while(1){
         int length = 0;
