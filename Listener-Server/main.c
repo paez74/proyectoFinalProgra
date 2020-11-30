@@ -5,6 +5,23 @@
 
 #pragma comment(lib,"ws2_32.lib")
 
+int sub_in_seq(char *sub, int sub_s, char *seq, int seq_s) {
+    int i = 0, j;
+    while (i < seq_s) {
+        if (seq[i] == sub[i]) { // Potential subsequence
+            j = i;
+            while (j < sub_s && j < seq_s) {
+                if (sub[j] != seq[j]) break;
+                ++j;
+            }
+
+            if (j == sub_s) return i;
+        }
+        ++i;
+    }
+
+    return -1;
+}
 
 //funcion main
 int main(int argc, char *argv[]) 
