@@ -29,7 +29,7 @@ struct inotify_event {
 int main(void){
     int notifier;
     int watcher;
-    const char* folder = "/home/parga/Desktop/LabDump/";
+    const char* folder = "/home/parga/Desktop/LabDump/"; // change for own
     notifier = inotify_init();
     if(notifier < 0){
         perror("Error notifier init");
