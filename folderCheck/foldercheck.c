@@ -135,7 +135,7 @@ int main(void)
                     {
                         printf("El archivo %s fue creado.\n", event->name);
                                     //send data
-                        message = "Ejemplo.seq";
+                        message = event->name;
                         n = send(clisockfd, message, strlen(message), 0);
                         if (n < 0)
                         {
