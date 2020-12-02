@@ -107,8 +107,7 @@ void compareDNA()
 
 int main(int argc, char *argv[])
 {
-	readFile("Ejemplo.seq");
-	compareDNA();
+	
 	WSADATA wsa;
 	SOCKET s;
 	struct sockaddr_in server;
@@ -134,7 +133,7 @@ int main(int argc, char *argv[])
 
 	server.sin_addr.s_addr = inet_addr("127.0.0.1");
 	server.sin_family = AF_INET;
-	server.sin_port = htons(6666);
+	server.sin_port = htons(6668);
 
 	//Connect to remote server
 	if (connect(s, (struct sockaddr *)&server, sizeof(server)) < 0)
@@ -145,14 +144,7 @@ int main(int argc, char *argv[])
 
 	puts("Connected");
 
-	//Send some data
-	message = "Hola como estas :)";
-	if (send(s, message, strlen(message), 0) < 0)
-	{
-		puts("Send failed");
-		return 1;
-	}
-	puts("Data Send\n");
+
 
 	while ((recv_size = recv(s, server_reply, 2000, 0)) != SOCKET_ERROR)
 	{
