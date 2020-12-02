@@ -11,6 +11,19 @@
 int lines = 0;
 char sequences[100][BUFSIZ];
 
+int seq_size()
+{
+	FILE *seq_f = fopen(TEXTFILE, "r");
+	int size = 0;
+
+	char c;
+	while ((c = fgetc(seq_f)) != EOF)
+		++size;
+
+	fclose(seq_f);
+	return size;
+}
+
 int sub_in_seq(char *sub, int sub_s)
 {
 	FILE *seq_f = fopen(TEXTFILE, "r");
@@ -79,9 +92,9 @@ int readFile(char *fileName)
 
 void compareDNA()
 {
-	int foundLines = 0;
+	int total_chars = seq_size(), matched_chars = 0, matched_lines = 0;
 	printf("Lines to search = %d\n", lines);
-#pragma omp parallel for shared(foundLines) schedule(static)
+#pragma omp parallel for shared(matched_lines) schedule(static)
 	for (int i = 0; i < lines; i++)
 	{
 		int j = 0, size = 0;
@@ -91,23 +104,24 @@ void compareDNA()
 		int foundAt = sub_in_seq(sequences[i], size); // ideal que quede asi
 		if (foundAt != -1)
 		{
-			// logica para guardar los resultados o para desplegarlos directo
 			printf("%s a partir del caracter %d\n", sequences[i], foundAt);
-			foundLines++;
+			matched_chars += size;
+			matched_lines += 1;
 		}
 		else
 		{
 			printf("%s no se encontro\n", sequences[i]);
 		}
 	}
-	printf("El archivo cubre el %d porciento del genoma de referencia\n", foundLines / lines * 100);
-	printf("%d secuencias mapeadas\n", foundLines);
-	printf("%d secuencias no mapeadas\n", foundLines - lines * -1);
+
+	printf("El archivo cubre el %.2f porciento del genoma de referencia\n", (matched_chars * 100.0) / total_chars);
+	printf("%d secuencias mapeadas\n", matched_lines);
+	printf("%d secuencias no mapeadas\n", lines - matched_lines);
 }
 
 int main(int argc, char *argv[])
 {
-	
+
 	WSADATA wsa;
 	SOCKET s;
 	struct sockaddr_in server;
@@ -143,8 +157,6 @@ int main(int argc, char *argv[])
 	}
 
 	puts("Connected");
-
-
 
 	while ((recv_size = recv(s, server_reply, 2000, 0)) != SOCKET_ERROR)
 	{
